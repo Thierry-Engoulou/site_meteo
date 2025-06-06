@@ -35,3 +35,5 @@ python-dotenv
 # Progress bar & logging
 tqdm
 loguru
+
+gunicorn
