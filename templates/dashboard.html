@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dashboard Météo Douala</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100 p-6">
+        <ul>
+      <li><a href="http://127.0.0.1:5000/">Accueil</a></li>
+      <li><a href="http://127.0.0.1:5000/previsions">previsions</a></li>
+      <li><a href="http://127.0.0.1:5000/carte">Carte</a></li>
+      <li><a href="http://127.0.0.1:5000/a_propos">A propos</a></li>
+    </ul>
+
+    <h1 class="text-3xl font-bold mb-4">🌍 Carte météo & Dashboard</h1>
+    <div
+      style="width: 800px; height: 400px; margin: auto; overflow: hidden"
+      class="mb-8 rounded-2xl overflow-hidden shadow"
+    >
+      {{ carte_html|safe }}
+    </div>
+
+        <div class="mb-6 flex justify-center space-x-4">
+      <button
+        id="showTemp"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      >
+        Température
+      </button>
+      <button
+        id="showHum"
+        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      >
+        Humidité
+      </button>
+      <button
+        id="showPress"
+        class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      >
+        Pression
+      </button>
+      <button
+        id="showVent"
+        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      >
+        Vent
+      </button>
+    </div>
+
+        <div class="bg-white p-4 rounded-2xl shadow" style="display: none;" id="chartContainer">
+      <canvas id="myChart" width="800" height="400"></canvas>
+    </div>
+
+    <script>
+      const labels = {{ labels|tojson }};
+      // Chaque dataset
+      const datasets = {
+        temp:    { data: {{ temps|tojson }},    borderColor: 'rgba(255,99,71,1)',    bg: 'rgba(255,99,71,0.2)' },
+        hum:     { data: {{ humidite|tojson }}, borderColor: 'rgba(30,144,255,1)',   bg: 'rgba(30,144,255,0.2)' },
+        press:   { data: {{ pression|tojson }}, borderColor: 'rgba(50,205,50,1)',    bg: 'rgba(50,205,50,0.2)' },
+        vent:    { data: {{ vent|tojson }},     borderColor: 'rgba(218,165,32,1)',  bg: 'rgba(218,165,32,0.2)' }
+      };
+
+      const ctx = document.getElementById('myChart').getContext('2d');
+      let myChart;
+
+      function createChart(label, data) {
+        if (myChart) {
+          myChart.destroy();
+        }
+        myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: label,
+              data: data.data,
+              borderColor: data.borderColor,
+              backgroundColor: data.bg,
+              tension: 0.3,
+              fill: true,
+              pointRadius: 2
+            }]
+          },
+          options: {
+            responsive: false, // Important : false pour la taille fixe
+            maintainAspectRatio: false,
+            // Définir une taille fixe pour le canvas
+            width: 800,
+            height: 400,
+            scales: {
+              y: {
+                beginAtZero: false
+              }
+            },
+            plugins: {
+              legend: {
+                display: false
+              },
+              tooltip: {
+                mode: 'index',
+                intersect: false
+              }
+            }
+          }
+        });
+        document.getElementById('chartContainer').style.display = 'block';
+      }
+
+      document.getElementById('showTemp').addEventListener('click', () => {
+        createChart('Température (°C)', datasets.temp);
+      });
+      document.getElementById('showHum').addEventListener('click', () => {
+        createChart('Humidité (%)', datasets.hum);
+      });
+      document.getElementById('showPress').addEventListener('click', () => {
+        createChart('Pression (hPa)', datasets.press);
+      });
+      document.getElementById('showVent').addEventListener('click', () => {
+        createChart('Vent (m/s)', datasets.vent);
+      });
+
+      // Actualiser les données toutes les 10 minutes (600000 ms)
+      setInterval(() => {
+        // Simuler une requête AJAX pour obtenir de nouvelles données (à remplacer par votre propre logique)
+        fetch('/nouvelles_donnees')
+          .then(response => response.json())
+          .then(newData => {
+            // Mettre à jour les données du graphique avec les nouvelles données
+            if (myChart) {
+              // Assurez-vous que newData contient les mêmes propriétés que votre structure de données originale
+              myChart.data.labels = newData.labels;
+              myChart.data.datasets[0].data = newData.data[myChart.data.datasets[0].label.split(' ')[0].toLowerCase()]; // Ajuster pour accéder aux données correctes
+              myChart.update();
+            }
+          })
+          .catch(error => console.error('Erreur lors de la récupération des nouvelles données:', error));
+      }, 600000);
+    </script>
+  </body>
+</html>

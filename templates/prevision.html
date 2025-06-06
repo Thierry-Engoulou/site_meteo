@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Météo Douala</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+    />
+  </head>
+  <body class="bg-gray-100 text-gray-800 p-6">
+        <ul>
+      <li><a href="http://127.0.0.1:5000/">Accueil</a></li>
+      <li><a href="http://127.0.0.1:5000/previsions">previsions</a></li>
+      <li><a href="http://127.0.0.1:5000/carte">Carte</a></li>
+      <li><a href="http://127.0.0.1:5000/a_propos">A propos</a></li>
+    </ul>
+
+    <h1 class="text-3xl font-bold mb-4">
+      🌤️ Météo à Douala - Données temps réel
+    </h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {% for ligne in data %}
+      <div class="bg-white rounded-2xl shadow p-4 text-center">
+        <h2 class="text-xl font-bold">{{ ligne['Ville'] }}</h2>
+        <img
+          class="mx-auto w-16"
+          src="https://openweathermap.org/img/wn/10d@2x.png"
+          alt="Icone météo"
+        />
+        <p class="text-gray-500">{{ ligne['Description météo'] }}</p>
+        <p class="text-2xl font-bold text-blue-600">
+          {{ ligne['Température (°C)'] }}°C
+        </p>
+        <p>
+          💧 {{ ligne['Humidité (%)'] }}% • 🌬️ {{ ligne['Vitesse du vent (m/s)']
+          }} m/s
+        </p>
+        <p class="text-sm mt-2">{{ ligne['Date et Heure'] }}</p>
+      </div>
+
+      {% endfor %}
+    </div>
+
+    <h2 class="text-2xl font-bold mt-10 mb-4">📈 Évolution température</h2>
+    <canvas id="chartTemp" height="100"></canvas>
+    <div id="map" class="h-96 w-full my-10 rounded-2xl"></div>
+
+    
+    <script>
+      const chartData = {
+        labels: ["Lundi", "Mardi", "Mercredi"],
+        datasets: [
+          {
+            label: "Température (°C)",
+            data: [22, 24, 21],
+            borderColor: "rgba(75, 192, 192, 1)",
+            backgroundColor: "rgba(75, 192, 192, 0.2)",
+            tension: 0.4,
+          },
+        ],
+      };
+
+      const ctx = document.getElementById("chart").getContext("2d");
+      const chart = new Chart(ctx, {
+        type: "line",
+        data: chartData,
+      });
+    </script>
+    
+  </body>
+</html>

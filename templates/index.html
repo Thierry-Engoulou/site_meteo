@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Carte météo Douala</title>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+  />
+</head>
+<body class="bg-gray-100 p-6">
+  <h1 class="text-3xl font-bold mb-4">🌍 Carte météo Douala</h1>
+  <!-- Ici s’insère la carte Folium -->
+  <div class="rounded-2xl overflow-hidden shadow">
+    {{ carte_html|safe }}
+  </div>
+
+  <p class="mt-4">
+    <a href="/previsions" class="text-blue-600 underline">
+      Voir le graphique des 48 dernières heures →
+    </a>
+  </p>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Météo Douala - Mise à jour toutes les 10 min</title>
+    <meta http-equiv="refresh" content="600"> <!-- rafraîchit toutes les 10 minutes -->
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background-color: #f0f0f0; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+    </style>
+</head>
+<body>
+    <h2>Données météo collectées toutes les 10 minutes (Douala)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Date et Heure</th>
+                <th>Ville</th>
+                <th>Description</th>
+                <th>Température (°C)</th>
+                <th>Humidité (%)</th>
+                <th>Pression (hPa)</th>
+                <th>Vent (m/s)</th>
+                <th>Pluie (mm)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ligne in data %}
+            <tr>
+                <td>{{ ligne['Date et Heure'] }}</td>
+                <td>{{ ligne['Ville'] }}</td>
+                <td>{{ ligne['Description météo'] }}</td>
+                <td>{{ ligne['Température (°C)'] }}</td>
+                <td>{{ ligne['Humidité (%)'] }}</td>
+                <td>{{ ligne['Pression (hPa)'] }}</td>
+                <td>{{ ligne['Vitesse du vent (m/s)'] }}</td>
+                <td>{{ ligne['Précipitation (mm)'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

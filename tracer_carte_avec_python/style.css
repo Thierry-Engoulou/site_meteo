@@ -1,0 +1,10 @@
+body{
+    display: flex;
+    justify-content: end;
+    padding: 0 1rem;
+}
+
+div#map_0e2b34b6424048ec407a855844e00b27 {
+    height: 300px;
+    width: 300px;
+}

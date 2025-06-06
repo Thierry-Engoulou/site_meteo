@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prévisions Météo Douala</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; }
+    #charts { display: flex; gap: 2rem; flex-wrap: wrap; }
+    canvas { background: #fafafa; border: 1px solid #ddd; border-radius: 8px; }
+    .error { color: red; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Prévisions Météo (7 pas)</h1>
+
+  <p id="errorMessage" class="error" style="display: none;">
+    ⚠️ Erreur : Impossible de charger les données de prévision.
+  </p>
+
+  <div id="charts">
+    <div>
+      <h2>Température (°C)</h2>
+      <canvas id="tempChart" width="400" height="200"></canvas>
+    </div>
+    <div>
+      <h2>Précipitations (mm)</h2>
+      <canvas id="precipChart" width="400" height="200"></canvas>
+    </div>
+  </div>
+
+  <script>
+    async function loadPrevisions() {
+      try {
+        const res = await fetch('/api/previsions'); // Assurez-vous que votre API fonctionne bien
+        const data = await res.json();
+        
+        console.log("Données reçues :", data); // Debugging
+
+        if (!data || !data.Temperature || !data.Precipitation) {
+          console.error("Les données de prévision sont absentes ou mal formatées.");
+          document.getElementById("errorMessage").style.display = "block"; // Affiche un message d'erreur
+          return;
+        }
+
+        const labels = data.Temperature.map((_, i) => `T+${i+1}`);
+
+        // Température
+        new Chart(document.getElementById('tempChart'), {
+          type: 'line',
+          data: {
+            labels,
+            datasets: [{
+              label: 'Température (°C)',
+              data: data.Temperature,
+              borderColor: 'red',
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              fill: false,
+              tension: 0.3
+            }]
+          },
+          options: { scales: { y: { beginAtZero: false } } }
+        });
+
+        // Précipitations
+        new Chart(document.getElementById('precipChart'), {
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [{
+              label: 'Précipitations (mm)',
+              data: data.Precipitation,
+              backgroundColor: 'blue',
+              borderColor: 'blue',
+              barPercentage: 0.5
+            }]
+          },
+          options: { scales: { y: { beginAtZero: true } } }
+        });
+
+      } catch (err) {
+        console.error('❌ Erreur en chargeant les prévisions:', err);
+        document.getElementById("errorMessage").style.display = "block"; // Affiche un message d'erreur
+      }
+    }
+
+    // Au chargement de la page
+    window.addEventListener('DOMContentLoaded', loadPrevisions);
+  </script>
+</body>
+</html>

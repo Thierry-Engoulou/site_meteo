@@ -1,0 +1,111 @@
+<!-- templates/dashboard_all.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Carte météo Cameroun</title>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+  />
+  <style>
+    #map { height: 500px; }
+  </style>
+</head>
+<body class="bg-gray-100 p-6">
+  <h1 class="text-3xl font-bold mb-4">🌍 Carte météo Cameroun</h1>
+
+  <!-- Carte Folium -->
+  <div class="rounded-2xl overflow-hidden shadow mb-6">
+    {{ map_html|safe }}
+  </div>
+
+  <!-- Filtre par station -->
+  <div class="mb-4">
+    <label for="station-select" class="block mb-1 font-semibold">Filtrer par station :</label>
+    <select id="station-select" class="p-2 border rounded">
+      <option value="">Toutes</option>
+      {% for rec in data %}
+        {% if rec.Station not in [] and loop.first %}{% set stations = [] %}{% endif %}
+      {% endfor %}
+      {% set station_list = data | map(attribute='Station') | unique %}
+      {% for st in station_list %}
+        <option value="{{ st }}">{{ st }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- Lien vers prévisions -->
+  <p class="mt-4">
+    <a href="/previsions" class="text-blue-600 underline">
+      Voir le graphique des 48 dernières heures →
+    </a>
+  </p>
+
+  <script>
+    // Filtrage simple des popups : recharge la page avec paramètre ?station=
+    document.getElementById('station-select').addEventListener('change', function() {
+      const val = this.value;
+      let url = '/';
+      if(val) url += '?station=' + encodeURIComponent(val);
+      window.location.href = url;
+    });
+  </script>
+</body>
+</html>
+
+
+<!-- templates/previsions_all.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Prévisions météo Cameroun</title>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+  />
+</head>
+<body class="bg-gray-100 p-6">
+  <h1 class="text-3xl font-bold mb-4">📈 Prévisions des 48 dernières heures</h1>
+
+  {% for station, info in prevision_data.items() %}
+    <div class="mb-8">
+      <h2 class="text-2xl font-semibold mb-2">{{ station }}</h2>
+      <canvas id="chart-{{ loop.index }}" class="w-full h-64 bg-white rounded shadow"></canvas>
+    </div>
+  {% endfor %}
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    {% for station, info in prevision_data.items() %}
+      new Chart(document.getElementById('chart-{{ loop.index }}').getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: {{ info.labels | tojson }},
+          datasets: [{
+            label: 'Température (°C)',
+            data: {{ info.temperatures | tojson }},
+            fill: false,
+            borderWidth: 2,
+            tension: 0.1
+          }]
+        },
+        options: {
+          scales: {
+            x: { display: true, title: { display: true, text: 'Date & Heure' } },
+            y: { display: true, title: { display: true, text: 'Température (°C)' } }
+          }
+        }
+      });
+    {% endfor %}
+  </script>
+
+  <p class="mt-4">
+    <a href="/" class="text-blue-600 underline">
+      ← Retour à la carte
+    </a>
+  </p>
+</body>
+</html>
