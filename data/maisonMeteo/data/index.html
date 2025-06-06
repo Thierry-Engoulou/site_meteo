@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StationFate</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    
+
+</head>
+<body>
+    <div class="container">
+        <div class="zone2">
+            <div class="date">
+                <div class="dateText"><p id="jour">00</p><p>-</p><p id="mois">00</p><p>-</p> <p id="annee">0000</p></div>
+                <div class="dateText"><p id="heure">00</p><p>:</p><p id="minute">00</p><p>:</p><p id="seconde">00</p></div>
+            </div>
+        </div>
+        <div class="zone1">
+            <a href="pression.html"    class="precipitation">
+                <P class="pText">Pression</P>
+                <p id="press" class="phum">0</p>
+            </a>
+            <a href="humidite.html" class="humidity">
+                <P class="pText">Humidité💧</P>
+                <p id="hum" class="phum">0</p>
+            </a>
+            <div class="zone3"> 
+                <a class="pression" href="Air.html">
+                    <P class="pText">Air🌬️</P>
+                    <p id="air" class="pair">0</p>
+                </a>
+                <a class="vent" href="vent.html">
+                    <P class="pText">Vent</P>
+                    <p id="vent" class="pair">0</p>
+                </a>
+        </div>
+       
+           
+        </div>
+        
+    </div>
+    <div class="zone3">
+        <a class="temperature" href="Temperature.html"><p class="pTextTemp">Temperature 🌡️</p>
+            <p id="temp" class="phum">0</p>
+        </a>
+        <a class="intensite" href="Intensite.html"><p class="pText">Intensité</p>
+            <p id="uv" class="phum">0</p>
+        </a>
+    </div>
+    <div class="pluie"><p class="pText">Type de pluie</p>
+        <p id="pluie" class="phum">0</p>
+        
+    </div>
+    <a href="GlobalData.txt" download  class="tel"><p>DONNEE Global</p></a>
+    
+    <script source="script.js"></script>
+    
+</body>
+</html>

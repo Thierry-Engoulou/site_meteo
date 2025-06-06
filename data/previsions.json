@@ -1,0 +1,56 @@
+import json
+import numpy as np
+from tensorflow.keras.models import load_model
+import pandas as pd
+from traitement.pretraitement import charger_donnees, pretraiter
+
+# Config
+VILLES = ["Douala"]
+MODEL_PATH = "../data/modele_lstm.h5"
+PREVISIONS_PATH = "../data/previsions.json"
+SEQUENCE_LENGTH = 16  # 48h / 3h
+
+# Charger le modèle
+model = load_model(MODEL_PATH)
+
+# Dictionnaire pour stocker toutes les prévisions
+all_previsions = {}
+
+for ville in VILLES:
+    # 1) Charger et prétraiter les données brutes
+    df = charger_donnees(ville)
+    X, y, scaler = pretraiter(df)
+
+    # 2) Prendre la dernière séquence
+    derniere_seq = X[-1:]  # forme (1, SEQUENCE_LENGTH, features)
+
+    # 3) Prédire 16 pas de suite
+    preds = []
+    seq = derniere_seq.copy()
+    for _ in range(SEQUENCE_LENGTH):
+        p = model.predict(seq)
+        preds.append(p.flatten())
+        # glisser la fenêtre
+        seq = np.concatenate([seq[:,1:,:], p.reshape(1,1,-1)], axis=1)
+
+    # 4) Remettre à l'échelle inverse
+    preds_rescaled = scaler.inverse_transform(np.array(preds))
+
+    # 5) Construire la liste de points horodatés
+    dates = pd.date_range(start=df['Date et Heure'].iloc[-1], periods=SEQUENCE_LENGTH+1, freq='3H')[1:]
+    points = []
+    for dt, val in zip(dates, preds_rescaled):
+        points.append({
+            "date": dt.strftime("%Y-%m-%d %H:%M:%S"),
+            "temperature": float(val[0]),
+            "pression": float(val[1]),
+            "humidite": float(val[2]),
+            "vent": float(val[3])
+        })
+    all_previsions[ville] = points
+
+# 6) Sauvegarde dans JSON
+with open(PREVISIONS_PATH, 'w', encoding='utf-8') as f:
+    json.dump(all_previsions, f, ensure_ascii=False, indent=2)
+
+print(f"✅ Prévisions générées et écrites dans {PREVISIONS_PATH}")

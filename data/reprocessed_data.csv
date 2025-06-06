@@ -1,0 +1,63 @@
+ import joblib
+def preprocess_data(csv_file='data/meteo_data.csv'):
+    """
+    Prétraite les données météorologiques pour l'entraînement du modèle LSTM.
+
+    Args:
+        csv_file (str): Chemin vers le fichier CSV contenant les données.
+
+    Returns:
+        tuple: X_train, X_test, y_train, y_test, scaler
+               où scaler est l'objet MinMaxScaler entraîné.
+    """
+    # 1. Charger les données
+    data = pd.read_csv(csv_file)
+
+    # 2. Sélectionner les caractéristiques pertinentes et la cible
+    features = ['Temperature', 'Humidity', 'Pressure']  # Ajuster selon vos données
+    target = 'Precipitation'  # Assurez-vous que cette colonne existe
+    data = data[features + [target]].dropna() # Supprimer les lignes avec des valeurs manquantes
+
+    # 3. Normaliser les caractéristiques
+    scaler = MinMaxScaler()
+    X = scaler.fit_transform(data[features])
+    y = data[target].values.reshape(-1, 1)
+
+    # 4. Diviser les données en ensembles d'entraînement et de test
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # 5. Reformater les données pour le LSTM (séquences temporelles)
+    def create_sequences(X, y, time_steps=10):
+        """
+        Crée des séquences de données pour le LSTM.
+
+        Args:
+            X (np.array): Caractéristiques.
+            y (np.array): Cible.
+            time_steps (int): Longueur de la séquence temporelle.
+
+        Returns:
+            tuple: X_seq, y_seq
+                   où X_seq et y_seq sont les données formatées pour le LSTM.
+        """
+        X_seq, y_seq = [], []
+        for i in range(len(X) - time_steps):
+            X_seq.append(X[i:i+time_steps])
+            y_seq.append(y[i+time_steps])
+        return np.array(X_seq), np.array(y_seq)
+
+    X_train, y_train = create_sequences(X_train, y_train)
+    X_test, y_test = create_sequences(X_test, y_test)
+
+    return X_train, X_test, y_train, y_test, scaler
+
+
+if __name__ == '__main__':
+    X_train, X_test, y_train, y_test, scaler = preprocess_data()
+    print("Shape of X_train:", X_train.shape)
+    print("Shape of y_train:", y_train.shape)
+    print("Shape of X_test:", X_test.shape)
+    print("Shape of y_test:", y_test.shape)
+    # Vous pouvez enregistrer le scaler ici si nécessaire
+    
+    joblib.dump(scaler, 'models/scaler.pkl')

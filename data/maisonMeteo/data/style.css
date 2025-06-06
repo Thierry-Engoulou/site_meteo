@@ -1,0 +1,252 @@
+body{
+    margin: 0px;
+    width: 100%;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    margin-top: 50px;
+    background-color: white;
+
+}
+.container{
+    display:grid;
+    width:80%;
+    grid-template-rows:auto;
+    grid-template-columns:49% 49%;
+    justify-content: center;
+    gap: 1px;
+    align-items: center;
+    transition: 1s;
+
+   
+
+}
+.zone1{
+    height:600px;
+    display:flex;
+    flex-direction:column;
+    width: 100%;
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
+    transition: 1s;
+    
+}
+.zone2{
+    display:flex;
+    flex-direction:row;
+    align-items: center;
+    justify-content:center;
+    height: 600px;
+    transition: 1s;
+}
+.zone3{
+    width: 80%;
+    display: flex;
+    flex-direction:row;
+    gap: 10px;
+    align-items:center;
+    justify-content:center;
+
+}
+.precipitation{
+   border-radius: 10px;
+    background-color: red;
+    height: 200px;
+    width: 80%;
+    text-decoration: none;
+
+
+}
+.date{
+    border-radius: 80px;
+    background-color: rgb(0, 255, 64);
+    height: 550px;
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+}
+.humidity{
+    border-radius: 10px;
+    background-color: antiquewhite;
+    height: 200px;
+    width: 80%;
+    text-decoration: none;
+
+}
+.pression{
+    border-radius: 10px;
+    background-color: rgb(211, 123, 16);
+    height: 100px;
+    width: 49%;
+    text-decoration: none;
+    
+}
+.vent{
+    border-radius: 10px;
+    height: 100px;
+    width: 49%;
+    background-color:yellow;
+    text-decoration: none;
+}
+.dateText{
+    font-weight:bolder;
+    font-family:Helvetica, Arial, sans-serif;
+    font-size: 60px;
+    color: white;
+    display: flex;
+    flex-direction: row;
+}
+.pText{
+    font-weight:bolder;
+    font-family:Helvetica, Arial, sans-serif;
+    font-size: 30px;
+    color: rgb(69, 61, 61);
+    position: relative;
+    left: 30px;
+
+}
+.pTextTemp{
+    font-weight:bolder;
+    font-family:Helvetica, Arial, sans-serif;
+    font-size: 30px;
+    color: rgb(69, 61, 61);
+    position: relative;
+    left: 30px;
+}
+.temperature{
+    width: 42%;
+    height:200px;
+    background-color: aqua;
+    border-radius:10px;
+    text-decoration: none;
+}
+.intensite{
+    width: 42%;
+    height:200px;
+    background-color: rgb(0, 255, 4);
+    border-radius:10px;
+    text-decoration: none;
+}
+.pluie{
+    width: 71%;
+    height:200px;
+    background-color: rgb(19, 251, 235);
+    border-radius:10px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+.zone3{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    gap:60px
+}
+
+.precipitation:hover,.humidity:hover,.pression:hover,.vent:hover {
+    cursor: pointer;
+    scale: 1.01;
+}
+.temperature:hover,.intensite:hover,.pluie:hover{
+    cursor: pointer;
+    scale: 1.01;
+}
+
+
+
+.phum{
+    font-size: 80px;
+    font-weight: bolder;
+    position: relative;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    left:40%;
+    bottom:30%;
+    color: rgb(0, 36, 68);
+}
+.pair{
+    font-size: 40px;
+    font-weight: bolder;
+    position: relative;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    left:50%;
+    bottom:85%;
+    color: rgb(0, 36, 68);
+}
+.tel{
+    width:30%;
+    border-radius: 20px;
+    height: 100px;
+    background-color: brown;
+    text-decoration: none;
+    font-size: 30px;
+    font-weight: bolder;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+}
+
+@media (max-width:1000px){
+    .phum{
+        font-size: 30px;
+        bottom: 0px;
+        left: 40%;
+    }
+    .pair{
+        font-size: 30px;
+        bottom: 30px;
+        left: 40%;
+    }
+   .container{
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    transition: 1s;
+
+   }
+   .zone3{
+    width:80%;
+    gap:10px
+    
+   }
+   .intensite{
+    width:50%
+   }
+   .temperature{
+    width:30%
+   }
+   .zone2{
+    width: 80%;
+    height: 100px;
+    margin:20px;
+    transition: 1s;
+    
+   }
+   .date{
+    height:200px;
+    border-radius: 10px;
+    width: 100%;
+    
+   }
+   .dateText{
+    font-size:30px
+   }
+   .pText{
+    font-size:20px
+   }
+   .pluie{
+    width:65%;
+    transition: 1s;
+    margin: 20px;
+   }
+   .pTextTemp{
+    font-size:20px;
+    left: 10px;
+   }
+  }

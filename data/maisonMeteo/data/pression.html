@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pression</title>
+    <link rel="stylesheet" href="styleP.css">
+</head>
+<body>
+    <div class="navBar">
+        <div class="precedent">
+            <a href="index.html"><</a>
+        </div>
+        
+        <ul class="lien" id="lien">
+            
+            <ol><a href="pression.html">Pression</a></ol>
+            <ol><a href="humidite.html">Humidite</a></ol>
+            <ol><a href="Air.html">Air</a></ol>
+            <ol><a href="vent.html">Vent</a></ol>
+            <ol><a href="Temperature.html">Temperature</a></ol>
+            <ol><a href="Intensite.html">Intensite</a></ol>
+        </ul>
+        <div class="icon" >
+            <img src="icon.png" alt="" onclick="devellope()">
+        </div>
+        
+    </div>
+    
+       
+        <div class="aff" id="contenair">
+            <div class="graph"><canvas id="pression"></canvas></div>
+            <div class="info">
+                <div>Pression: <p id="press"> 0</p></div>
+                <button class="bouton"> <a href="dataPress.txt" download >DONNEE PRESSION</a> </button>  
+            </div>
+            
+        </div>
+        
+    </div>
+    <script src="chart.js"></script>
+    <script src="scriptP.js"></script> 
+    <script>
+        let menu=document.getElementById('lien');
+        let box=document.getElementById("title");
+        let box2=document.getElementById("contenair");
+        menu.style.maxHeight='0px'
+        function devellope (){
+            if(menu.style.maxHeight=='0px'){
+                menu.style.maxHeight='300px'
+                menu.style.transition="1s"
+                box2.style.translate="0px 300px"
+                box2.style.transition="1s"
+            }
+            else
+            {
+                menu.style.maxHeight='0px'
+                box2.style.translate="0px 0px"
+                box2.style.transition="1s"
+                menu.style.transition="1s"
+            }
+        }
+        </script>
+    
+</body>
+</html>
