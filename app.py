@@ -2,6 +2,10 @@ from flask import Flask, render_template, request
 import pandas as pd
 from datetime import datetime, timedelta
 import folium
+import os
+
+port = int(os.environ.get("PORT", 10000))
+
 
 app = Flask(__name__)
 EXCEL_PATH = "./data/meteo_douala4.xlsx"
